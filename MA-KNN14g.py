@@ -211,7 +211,7 @@ def mainKNN_T(path, file):
     
     
     runNumber = 0
-    outerExecutor = concurrent.futures.ProcessPoolExecutor(max_workers = 4) # 4
+    outerExecutor = concurrent.futures.ProcessPoolExecutor(max_workers = 1) # 4
     outerFutures = []
     
     while runNumber < len(taguchiL81): #len(taguchiL81):  
@@ -298,7 +298,7 @@ def outer_thread_function(runNumber, startTime, preTime, parentDataset, paramete
         #if taguchiL81[runNumber][3] != taguchiL81[runNumber-1][3] or taguchiL81[runNumber][4] != taguchiL81[runNumber-1][4] or taguchiL81[runNumber][5] != taguchiL81[runNumber-1][5] or taguchiL81[runNumber][6] != taguchiL81[runNumber-1][6] or taguchiL81[runNumber][7] != taguchiL81[runNumber-1][7] or taguchiL81[runNumber][8] != taguchiL81[runNumber-1][8]: 
         print("total#" + str(runNumber) + " " + str(parameters))
         counter = 0
-        innerExecutor = concurrent.futures.ProcessPoolExecutor(max_workers=5) # 5
+        innerExecutor = concurrent.futures.ProcessPoolExecutor(max_workers=1) # 5
         innerFutures = []
         
         while counter < parameters[15]:
@@ -973,7 +973,7 @@ def statusMsg(startTime, preTime):
 #mainKNN_T('/home/sebastian/Documents/AIS-KNN-Files', 'aisdk-2023-11-08-xxxxs_1_kkn.csv')
 #mainKNN_T('/home/sebastian/Dokumente/AIS-KNN-Files', 'aisdk-2023-11-08-5xs_1_kkn.csv')
 #mainKNN_T('/home/sebastian/Dokumente/AIS-KNN-Files', 'aisdk-2023-11-08-xxxxs_1_kkn.csv')
-mainKNN_T('/home/sebastian/Dokumente/AIS-KNN-Files', 'aisdk-2023-11-08-xxxs_1_kkn.csv')
+#mainKNN_T('/home/sebastian/Dokumente/AIS-KNN-Files', 'aisdk-2023-11-08-xxxs_1_kkn.csv')
 #mainKNN_T('/home/sebastian/Dokumente/AIS-KNN-Files', 'aisdk-2023-11-08-xxs_1_kkn.csv')
 #mainKNN_T('/home/sebastian/Dokumente/AIS-KNN-Files', 'aisdk-2023-11-08-xs_1_kkn.csv')
 #mainKNN_T('/home/sebastian/Dokumente/AIS-KNN-Files', 'aisdk-2023-11-08-xs_4_kkn.csv')
@@ -985,12 +985,12 @@ mainKNN_T('/home/sebastian/Dokumente/AIS-KNN-Files', 'aisdk-2023-11-08-xxxs_1_kk
 
 
 
-# mainKNN_T("C:\\Dokumente\\Studium\\Jade HS\\MA_ET\\AIS_MA\\aisdk-2023-11-11_6x_kkn.csv")
-# mainKNN_T("C:\\Dokumente\\Studium\\Jade HS\\MA_ET\\AIS_MA\\aisdk-2023-11-11_kkn.csv")
-# mainKNN_T("C:\\Dokumente\\Studium\\Jade HS\\MA_ET\\AIS_MA\\aisdk-2023-11-11_filtered_kkn.csv")
-# mainKNN_T("C:\\Dokumente\\Studium\\Jade HS\\MA_ET\\AIS_MA\\aisdk-2023-11-11_266288000_kkn.csv")
-# mainKNN_T("C:\\Dokumente\\Studium\\Jade HS\\MA_ET\\AIS_MA\\aisdk-2023-11-11_266288000_s_kkn.csv")
-# mainKNN_T("C:\\Dokumente\\Studium\\Jade HS\\MA_ET\\AIS_MA", "aisdk-2023-11-11_266288000_xs_kkn.csv")
+# mainKNN_T("C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\aisdk-2023-11-11_6x_kkn.csv")
+# mainKNN_T("C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\aisdk-2023-11-11_kkn.csv")
+# mainKNN_T("C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\aisdk-2023-11-11_filtered_kkn.csv")
+# mainKNN_T("C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\aisdk-2023-11-11_266288000_kkn.csv")
+# mainKNN_T("C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\aisdk-2023-11-11_266288000_s_kkn.csv")
+mainKNN_T("C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA", "aisdk-2023-11-11_266288000_xs_kkn.csv")
 
 # ToDo
 # aufteilen von CreateDataSet in Daten als record einlesen, in ParentTrack[100] zerlegen

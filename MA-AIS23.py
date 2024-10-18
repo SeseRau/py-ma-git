@@ -1309,20 +1309,20 @@ def statusMsg(startTime, preTime):
 #mainAIS('/home/sebastian/Dokumente/AIS-Files/aisdk-2023-11-08-10.csv')
 
 
-#mainAIS('C:\\Dokumente\\Studium\\Jade HS\\MA_ET\\AIS_MA\\AIS_Test.csv')
+#mainAIS('C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\AIS_Test.csv')
 
-# mainAIS('C:\\Dokumente\\Studium\\Jade HS\\MA_ET\\AIS_MA\\aisdk-2023-11-11.csv')
-# mainAIS('C:\\Dokumente\\Studium\\Jade HS\\MA_ET\\AIS_MA\\aisdk-2023-11-11_filtered.csvconda install conda-forge::tensorflow')
-mainAIS('C:\\Dokumente\\Studium\\Jade HS\\MA_ET\\AIS_MA\\aisdk-2023-11-11_266288000.csv')
-# mainAIS('C:\\Dokumente\\Studium\\Jade HS\\MA_ET\\AIS_MA\\aisdk-2023-11-11_266288000_s.csv')
-# mainAIS('C:\\Dokumente\\Studium\\Jade HS\\MA_ET\\AIS_MA\\aisdk-2023-11-11_266288000_xs.csv')
-# mainAIS('C:\\Dokumente\\Studium\\Jade HS\\MA_ET\\AIS_MA\\AIS_Test.csv')
+# mainAIS('C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\aisdk-2023-11-11.csv')
+# mainAIS('C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\aisdk-2023-11-11_filtered.csvconda install conda-forge::tensorflow')
+# mainAIS('C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\aisdk-2023-11-11_266288000.csv')
+mainAIS('C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\aisdk-2023-11-11_266288000_s.csv')
+# mainAIS('C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\aisdk-2023-11-11_266288000_xs.csv')
+# mainAIS('C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\AIS_Test.csv')
 
-#mainAIS('C:\\Dokumente\\Studium\\Jade HS\\MA_ET\\AIS_MA\\AIS_170155704388163013_2729-1701557044518_miss.csv')
+#mainAIS('C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\AIS_170155704388163013_2729-1701557044518_miss.csv')
 
-#mainAIS('C:\\Dokumente\\Studium\\Jade HS\\MA_ET\\AIS_MA\\aisdk_20060302_test_s.csv')
+#mainAIS('C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\aisdk_20060302_test_s.csv')
     
-#mainAIS('/home/sebastian/Dokumente/MA_ET/AIS_MA/AIS_170155704388163013_2729-1701557044518_miss.csv')   
+#mainAIS('/home/sebastian/Dokumente/MA-ET/AIS-MA/AIS_170155704388163013_2729-1701557044518_miss.csv')   
 
 # ToDo
 # - RAM Nutzung optimieren
