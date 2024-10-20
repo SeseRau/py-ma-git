@@ -7,3 +7,18 @@ Ich nutze Python=3.10
 
 Grüße
 Sebastian
+
+
+Erzeugung der venv:
+```bash	
+python -m venv venv	
+source venv/bin/activate
+pip install -r requirements.txt
+# Install as a kernel
+python -m ipykernel install --user --name=masterarbeit --display-name="Python (masterarbeit)"
+```
+
+
+```bash
+python MA-AIS23.py 
+```

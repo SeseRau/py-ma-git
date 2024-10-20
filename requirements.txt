@@ -1,0 +1,12 @@
+tensorflow
+keras
+scikit-learn
+matplotlib
+numpy
+psutil
+argparse
+pandas
+ipykernel
+seaborn
+jupyter
+tqdm

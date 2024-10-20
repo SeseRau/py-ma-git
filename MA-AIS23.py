@@ -27,14 +27,14 @@ def mainAIS(path):
     dataset = []
     track = []
     
-    lengthMessage = 15 # Amought of AIS messages of one MMSI
+    lengthMessage = 100 # Amought of AIS messages of one MMSI
     timeIntervall = 30 # Maximum time intervall between two AIS messages in Sec
     rSize = 10000 # radius of the circ in m
     speedMin = 0 # Speed value in km/h
     speedMax = 55.0 # Speed value in km/h (55 km/h ~ 30 kn)
     minMove = 10 # minimal Movement in m
     precision = 1 # digets behind dot
-    numberOfTrackVariations = 1 #17 #50 # how many variations of a track are includet in the result
+    numberOfTrackVariations = 2 #17 #50 # how many variations of a track are includet in the result
 
     #aisDK
     latMin = 53.0 # minimal latitude
@@ -1013,6 +1013,8 @@ def fileSaving(dataset, path, lengthMessage, numberOfTrackVariations, startTime,
         csv_path = path[:len(path)-4] + '_' + str(numberOfTrackVariations) + '_kkn.csv'
         gnu_path = path[:len(path)-4] + '_' + str(numberOfTrackVariations) + '_kkn_gnu.csv'
 
+        #/home/sebastian/Dokumente/Python-Git/py-my
+
         # creates string for knn-file 
         lengthData = len(dataset)
         print('Laenge Datensatz: \t' + str(lengthData))
@@ -1304,7 +1306,7 @@ def statusMsg(startTime, preTime):
 #mainAIS('/home/sebastian/Dokumente/AIS-FilesaisdkRAWtest_5_kkn/aisdk-2023-11-10.csv')
 # mainAIS('/home/sebastian/Dokumente/AIS-Files/aisdk-2023-11-08.csv')
 # mainAIS('/home/sebastian/Dokumente/AIS-Files/aisdk-2023-11-09.csv')
-# mainAIS('/home/sebastian/Dokumente/AIS-Files/aisdk-2023-11-10.csv')
+mainAIS('/home/sebastian/Dokumente/AIS-Files/aisdk-2023-11-08-xs.csv')
 # mainAIS('/home/sebastian/Dokumente/AIS-Files/aisdk-2023-11-11.csv')
 #mainAIS('/home/sebastian/Dokumente/AIS-Files/aisdk-2023-11-08-10.csv')
 
@@ -1314,7 +1316,7 @@ def statusMsg(startTime, preTime):
 # mainAIS('C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\aisdk-2023-11-11.csv')
 # mainAIS('C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\aisdk-2023-11-11_filtered.csvconda install conda-forge::tensorflow')
 # mainAIS('C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\aisdk-2023-11-11_266288000.csv')
-mainAIS('C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\aisdk-2023-11-11_266288000_s.csv')
+# mainAIS('C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\aisdk-2023-11-11_266288000_s.csv')
 # mainAIS('C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\aisdk-2023-11-11_266288000_xs.csv')
 # mainAIS('C:\\Dokumente\\Studium\\Jade-HS\\MA-ET\\AIS-MA\\AIS_Test.csv')
 

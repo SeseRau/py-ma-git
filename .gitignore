@@ -1,0 +1,15 @@
+workdir/*/*
+!workdir/*/.gitkeep
+!workdir/.gitkeep
+venv
+
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.DS_Store
+*.log
+*.sqlite3
