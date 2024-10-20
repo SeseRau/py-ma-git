@@ -10,3 +10,4 @@ ipykernel
 seaborn
 jupyter
 tqdm
+auto-sklearn
