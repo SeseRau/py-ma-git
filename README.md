@@ -11,7 +11,7 @@ Sebastian
 
 Erzeugung der venv:
 ```bash	
-conda create -n py39 "python==3.9" 
+conda create -n py39 "python==3.9.13" 
 
 
 python -m venv venv	
