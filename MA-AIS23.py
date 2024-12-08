@@ -34,7 +34,7 @@ def mainAIS(path):
     speedMax = 55.0 # Speed value in km/h (55 km/h ~ 30 kn)
     minMove = 10 # minimal Movement in m
     precision = 1 # digets behind dot
-    numberOfTrackVariations = 2 #17 #50 # how many variations of a track are includet in the result
+    numberOfTrackVariations = 2 #17 #50 # how many variations of a track are included in the result
 
     #aisDK
     latMin = 53.0 # minimal latitude
@@ -1306,7 +1306,8 @@ def statusMsg(startTime, preTime):
 #mainAIS('/home/sebastian/Dokumente/AIS-FilesaisdkRAWtest_5_kkn/aisdk-2023-11-10.csv')
 # mainAIS('/home/sebastian/Dokumente/AIS-Files/aisdk-2023-11-08.csv')
 # mainAIS('/home/sebastian/Dokumente/AIS-Files/aisdk-2023-11-09.csv')
-mainAIS('/home/sebastian/Dokumente/AIS-Files/aisdk-2023-11-08-xs.csv')
+# mainAIS('/home/sebastian/Dokumente/AIS-Files/aisdk-2023-11-08-xs.csv')
+mainAIS('/home/sebastian/Dokumente/Python-Git/py-ma-git/workdir/AIS-Files/aisdk-2023-11-08-s.csv')
 # mainAIS('/home/sebastian/Dokumente/AIS-Files/aisdk-2023-11-11.csv')
 #mainAIS('/home/sebastian/Dokumente/AIS-Files/aisdk-2023-11-08-10.csv')
 
