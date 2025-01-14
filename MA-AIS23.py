@@ -34,7 +34,7 @@ def mainAIS(path):
     speedMax = 55.0 # Speed value in km/h (55 km/h ~ 30 kn)
     minMove = 10 # minimal Movement in m
     precision = 1 # digets behind dot
-    numberOfTrackVariations = 2 #17 #50 # how many variations of a track are included in the result
+    numberOfTrackVariations = 1 #17 #50 # how many variations of a track are included in the result
 
     #aisDK
     latMin = 53.0 # minimal latitude
@@ -57,16 +57,11 @@ def mainAIS(path):
         elements, preTime = elementsSorting(elements, primeSortingElement, secSortingElement, startTime, preTime) # sorting AIS-Messgages by 'MMSI' assending and by time assending
         elements, preTime = dualElement(elements, startTime, preTime) # deletes 'element' with the same UUID and timestamp
         dataset, preTime = trackBuild(elements, lengthMessage, timeIntervall, startTime, preTime) # checks if the AIS-Messages belong to the same IMOnr and are less than 'timeIntervall' secounds apart and if there are at least 'minMessages' AIS-Messages from one IMOnr
-        # del elements
-        #gc.collect()
-        # for element in elements:
-        #    track.append(element)
-        # dataset.append(track)
 
         
         
         dataset, preTime = wgs84toProjection(dataset, startTime, preTime) # add [5] x and [6] y by Mercator projection
-        # statcount = fileStats(dataset, path, statcount, startTime, preTime)
+
         dataset, preTime = trackSplitting(dataset, lengthMessage, startTime, preTime) # checks if Message number per Track is surfissiant and splites too long 'tracks' into parts
         
         
@@ -81,14 +76,7 @@ def mainAIS(path):
         dataset, preTime = lenghtCheck(dataset, lengthMessage, startTime, preTime) # checks if dataset have the lenght 'lengthMessage'
         dataset, preTime = trackMirrow(dataset, startTime, preTime) # mirrows track by x and y axis and does the same after switching x and y value 1 track -> 8 track
         dataset, preTime = polarCoord(dataset, precision, startTime, preTime) # adds polar coordinates
-        # statcount = fileStats(dataset, path, statcount, startTime, preTime)
-        #for track in dataset:
-        #    if 7500 <= len(track) <= 100000 and 30 <= (np.sqrt((float(track[len(track)-1][4]-track[0][4]))**2+(float(track[len(track)-1][5]-track[0][5])**2))):
-        #        print(track[0][0])
-        #        print(len(track))
-        #        print(np.sqrt((float(track[len(track)-1][4]-track[0][4]))**2+(float(track[len(track)-1][5]-track[0][5])**2)))
-        #        print('--')
-        #dataset = roundTracks(dataset, precision) # rounds 'x' and 'y' values to 'presission' digets behind dot
+
         fileSaving(dataset, path, lengthMessage, numberOfTrackVariations, startTime, preTime) # writes conclusion into .csv
         
     # 'elements' is empty
@@ -110,8 +98,7 @@ def inputFile(path, startTime, preTime):
     aisDataList = aisDataFile.readlines()
     aisDataFile.close()
 
-    # elements = [] #[0]*len(aisDataList)
-    # elementCounter = 0
+
     posElement = 0
     if(aisDataList[0].split(',')[2] == 'MMSI'):
         # First line in file is discription -> skip first line
@@ -125,12 +112,7 @@ def inputFile(path, startTime, preTime):
         if element != preElement: # filter duplications
         
             tmpElement = ['0']*4
-            # element[2] = int(element[2])
-            # element[3] = float(element[3])
-            # element[4] = float(element[4])
-            # tmpElement = [element[i] for i in [2, 0, 3, 4]]
-    
-            # tmpElement[0:3] = element[2:5] # MMSI, LAT, LOG
+
             tmpElement[0] = int(element[2]) #MMSI
             tmpElement[1] = str(element[0]) #TIME
             tmpElement[2] = float(element[3]) #LAT
@@ -145,26 +127,15 @@ def inputFile(path, startTime, preTime):
 
     preTime = statusMsg(startTime, preTime)
     print('Zeilen gelesen: \t' + str(len(aisDataList)))
-    # print('Zeilen gelöscht: \t' + str((len(aisDataList))-elementCounter))
     # free up memory
     del aisDataList
 
-    # resizedElements = ['0'] * elementCounter
-    # resizedElements = elements[:elementCounter]
-    
-
-    # print(elements)
-    # print(resizedElements)
-
-    
-    # print('inputFile Zeilen: \t' + str(len(resizedElements)))
     preTime = statusMsg(startTime, preTime)
 
     # free up memory
-    # del aisDataList
     del element
     del tmpElement
-    # del elements
+
     return elements, preTime
  
 def elementCutting(elements, latMin, latMax, lonMin, lonMax, startTime, preTime):
@@ -179,19 +150,16 @@ def elementCutting(elements, latMin, latMax, lonMin, lonMax, startTime, preTime)
     # elementCounter = 0
     posElement = 0
     while posElement < len(elements):
-        # if posElement % 1000000 == 0: 
-        #     print('pE:\t' + str(posElement) + '\tlE:\t' + str(len(elements)) + '\tpoped:\t' + str(poped))
+  
         # check if lat is out of boundery AND check if long is out of boundery
         if latMin <= float(elements[posElement][2]) <= latMax and lonMin <= float(elements[posElement][3]) <= lonMax:
             # check is success - append to new list
             tmpElements.append(elements[posElement])
-            # tmpElements[elementCounter] = elements[posElement]
-            # elementCounter = elementCounter + 1
+            
             
         posElement = posElement + 1 
 
-    # resizedElements = ['0'] * elementCounter
-    # resizedElements = tmpElements[:elementCounter]
+
 
     print('elementCutting Zeilen im Bereich: \t' + str(len(tmpElements)))
     preTime = statusMsg(startTime, preTime)
@@ -203,7 +171,7 @@ def elementCutting(elements, latMin, latMax, lonMin, lonMax, startTime, preTime)
     del latMin
     del lonMax
     del lonMin
-    # del tmpElements
+
     
     return tmpElements, preTime
 
@@ -220,7 +188,6 @@ def timeConversion(elements, startTime, preTime):
          # timeformat (DD/MM/YYYY HH:MM:SS)
 
         while posElement < len(elements):
-            #elements[posElement][1] = time.mktime(datetime.strptime(elements[posElement][1], '%d/%m/%Y %H:%M:%S').timetuple())
             tmpElement = elements[posElement][1]     
             tmpElement = tmpElement.replace(':','/')
             tmpElement = tmpElement.replace(' ','/')
@@ -314,7 +281,6 @@ def trackBuild(elements, lengthMessage, timeIntervall, startTime, preTime):
             sameMMSI = 0
         else:
             # no track
-            #print(elementPso)
             startElement = startElement + 1
             sameMMSI = 0
         
@@ -462,17 +428,13 @@ def speedControl(dataset, speedMin, speedMax, timeIntervall, lengthMessage, star
 
     speedMax = speedMax / 3.6 # conversion km/h to m/s
 
-    #print('MaxSpeed: \t' + '{0:.3f}'.format(speedMax))
 
     while posTrack < len(dataset): # select track
         posElement = 1
         while posElement < len(dataset[posTrack]): # select element
             if (np.sqrt((float(dataset[posTrack][posElement][2])-float(dataset[posTrack][posElement-1][2]))**2 + (float(dataset[posTrack][posElement][3])-float(dataset[posTrack][posElement-1][3]))**2)/(int(dataset[posTrack][posElement][1])-int(dataset[posTrack][posElement-1][1])) <= speedMax):
-            #
                 curTrackLen = curTrackLen + 1
-            # else:
-            #     print(dataset[posTrack][posElement-1]) 
-            #     print(dataset[posTrack][posElement])
+
                 
             posElement = posElement + 1
             
@@ -498,11 +460,10 @@ def  movementControl(dataset, minMove, startTime, preTime):
     posTrack = 0
 
     while posTrack < len(dataset):
-        # if distance between first an last track element is greater than 'minMove' m
         if (np.sqrt((float(dataset[posTrack][len(dataset[posTrack])-1][2])-float(dataset[posTrack][0][2]))**2 + (float(dataset[posTrack][len(dataset[posTrack])-1][3])-float(dataset[posTrack][0][3]))**2)) >= minMove:
 
             tmpDataset.append(dataset[posTrack])
-        #     print('Movment: ' + str(np.sqrt((float(track[len(track)-1][2])-float(track[0][2]))**2+(float(track[len(track)-1][3])-float(track[0][3]))**2)))
+        
         posTrack = posTrack + 1
 
     print('movementControl Strecken geprueft: \t' + str(len(tmpDataset)))
@@ -526,15 +487,14 @@ def centerPosTracks(dataset, startTime, preTime):
     posElement = 0
 
     while posTrack < len(dataset):
-        # print(dataset[posTrack][0])
+
         XDelta = dataset[posTrack][0][2] 
         YDelta = dataset[posTrack][0][3]
-        #print(posTrack, YDelta,posTrack)
+
         while posElement < len(dataset[posTrack]):
             dataset[posTrack][posElement][2] = dataset[posTrack][posElement][2] - XDelta # Calculation of element on x-axis relative to previouse element ('elementPre')
             dataset[posTrack][posElement][3] = dataset[posTrack][posElement][3] - YDelta # Calculation of element on y-axis relative to previouse element ('elementPre')
-            # print('track:\t'  + '{0:.3f}'.format(dataset[posTrack][posElement][3]) + '\tYDelta:\t' + '{0:.3f}'.format(YDelta) + '\tresult:\t' + '{0:.3f}'.format(dataset[posTrack][posElement][3] - YDelta))
-
+ 
             posElement = posElement + 1
         posElement = 0
         posTrack = posTrack + 1
@@ -582,8 +542,7 @@ def circRanPosTracks(dataset, rSize, numberOfTrackVariations, startTime, preTime
                 
                 tmpVar = abs(np.sqrt((sCirc)**2 - (dataset[posTrack][lenTrack][3])**2) - abs(dataset[posTrack][lenTrack][2]))
                 offsetX = random.uniform(- tmpVar, tmpVar)
-                # if (dataset[posTrack][lenTrack][2] + offsetX)**2 > sCirc**2:
-                #     print('xL:\t' + '{0:.3f}'.format(dataset[posTrack][lenTrack][2]) + '\toffX:\t' + '{0:.3f}'.format(offsetX))
+
                 tmpVar = abs(np.sqrt((sCirc)**2 - (abs(dataset[posTrack][lenTrack][2]) + abs(offsetX))**2)  - abs(dataset[posTrack][lenTrack][3]))
                 offsetY =  random.uniform(- tmpVar, tmpVar)
 
@@ -596,26 +555,17 @@ def circRanPosTracks(dataset, rSize, numberOfTrackVariations, startTime, preTime
                     print('offsetX:\t' + '{0:.3f}'.format(offsetX) + '\toffsetY:\t' + '{0:.3f}'.format(offsetY))
                     print('lastXTrack:\t' + '{0:.3f}'.format(dataset[posTrack][lenTrack][2]) + '\tlastYTrack:\t' + '{0:.3f}'.format(dataset[posTrack][lenTrack][3]))
                 tmpTrack = copy.deepcopy(dataset[posTrack])
-                # print(len(dataset[posTrack]))
+
                 while posElement < len(dataset[posTrack]):
                     tmpTrack[posElement][2] = dataset[posTrack][posElement][2] + offsetX
                     tmpTrack[posElement][3] = dataset[posTrack][posElement][3] + offsetY
-                    # if np.sqrt((tmpTrack[posElement][2])**2 + (tmpTrack[posElement][3])**2) > rSize:
-                    #     print('{0:.3f}'.format(np.sqrt((tmpTrack[posElement][2])**2 + (tmpTrack[posElement][3])**2)))
-                    #     print('offsetX:\t' + '{0:.3f}'.format(offsetX) + '\toffsetY:\t' + '{0:.3f}'.format(offsetY))
-                    #     print('XTrack:\t' + '{0:.3f}'.format(tmpTrack[posElement][2] - offsetX) + '\tYTrack:\t' + '{0:.3f}'.format(tmpTrack[posElement][3] - offsetY))
-                    #     print('ResXTrack:\t' + '{0:.3f}'.format(tmpTrack[posElement][2]) + '\tResYTrack:\t' + '{0:.3f}'.format(tmpTrack[posElement][3]))
 
                     posElement = posElement + 1
-                    # print(trackVarcount)
-                    # print(posTrack)
-                    # print(posTrack*numberOfTrackVariations + trackVarcount)
-                    # print(tmpTrack)
+
                 posElement = 0
-                # print(len(tmpTrack))
-                # print(tmpTrack)
+
                 tmpDataset.append(tmpTrack)
-                # tmpTrack = []
+
 
             
             
@@ -630,12 +580,6 @@ def circRanPosTracks(dataset, rSize, numberOfTrackVariations, startTime, preTime
     print('circRanPosTracks Repso:\t' + str(len(dataset)) + ' * ' + str(numberOfTrackVariations) + ' = ' +  str(len(tmpDataset)))
     preTime = statusMsg(startTime, preTime)
 
-    # print(len(tmpDataset))
-    # print(len(tmpDataset[-1]))
-    # i = 0
-    # for track in tmpDataset:
-    #     print(str(i) + '\t' + str(len(track)))
-    #     i = i + 1
 
 
     # free up memory
@@ -665,8 +609,6 @@ def roundTracks(dataset, precision, startTime, preTime):
         
     print('roundTracks: \t' + str(len(dataset)))
     preTime = statusMsg(startTime, preTime)
-    
-    print(dataset[0][0])
 
     return dataset, preTime
 
@@ -682,12 +624,7 @@ def circCutTracks(dataset, rSize, lengthMessage, startTime, preTime):
         while posElement < len(dataset[posTrack]):
             centerDistance = math.sqrt((dataset[posTrack][posElement][2])**2 + (dataset[posTrack][posElement][3]**2))
             if(centerDistance <= (rSize)): 
-                #print(str(dataset[posTrack][posElement][2]) + '\t\t' + str(dataset[posTrack][posElement][3]) + '\t\t' + str(math.sqrt((dataset[posTrack][posElement][2])**2 + (dataset[posTrack][posElement][3]**2))) + '\t\t'+ str(dataset[posTrack][posElement][1]))
-                #print('center distance: ' + str(centerDistance))
                 curTrackLen = curTrackLen + 1
-            # else:
-            #     print(dataset[posTrack][posElement])
-            #     print(centerDistance)
             posElement = posElement + 1
             
         if curTrackLen == lengthMessage:
@@ -737,150 +674,7 @@ def lenghtCheck(dataset, lengthMessage, startTime, preTime):
 
 def trackMirrow(dataset, startTime, preTime):
     # '''Erzeugt weitere Tracks durch Spiegelung an der X- und Y-Achse'''
-    # lenDataset = len(dataset)
-
-    # # print(dataset)
-    # # print(lenDataset)
-
-    # # tmpDataset = [0] * (8*lenDataset)
-    # # tmpDataset1 = [0] * lenDataset
-    # # tmpDataset2 = [0] * lenDataset
-    # # tmpDataset3 = [0] * lenDataset
-    # # tmpDataset4 = [0] * lenDataset
-    # # tmpDataset5 = [0] * lenDataset
-    # # tmpDataset6 = [0] * lenDataset
-    # # tmpDataset7 = [0] * lenDataset
-    # # tmpDataset8 = [0] * lenDataset
-    # tmpDataset = []
-    # # tmpDataset= []
-    # # tmpDataset2= []
-    # # tmpDatasetk3= []
-    # # tmpDataset4= []
-    # # tmpDataset5= []
-    # # tmpDataset6= []
-    # # tmpDataset7= []
-    # # tmpDataset8= []
-    # posTrack = 0
-    # posElement = 0
-
-    # tmpDataset = copy.deepcopy(dataset) + copy.deepcopy(dataset) + copy.deepcopy(dataset) + copy.deepcopy(dataset) + copy.deepcopy(dataset) + copy.deepcopy(dataset) + copy.deepcopy(dataset) + copy.deepcopy(dataset)
-    # # tmpDataset2 = copy.deepcopy(dataset)
-    # # tmpDataset3 = copy.deepcopy(dataset)
-    # # tmpDataset4 = copy.deepcopy(dataset)
-    # # tmpDataset5 = copy.deepcopy(dataset)
-    # # tmpDataset6 = copy.deepcopy(dataset)
-    # # tmpDataset7 = copy.deepcopy(dataset)
-    # # tmpDataset8 = copy.deepcopy(dataset)
-
-    # # print(type(tmpTrack1))
-    # # print(type(tmpDataset))
-
-    # while posTrack < lenDataset:
-    #     while posElement < len(dataset[posTrack]):
-    #         # # print(tmpDataset[1*lenDataset + posTrack][posElement][4])
-    #         tmpDataset[1*lenDataset + posTrack][posElement][4] = -1 * (dataset[posTrack][posElement][4])
-    #         # # print(tmpDataset[1*lenDataset + posTrack][posElement][4])
-    #         # # df
-    #         tmpDataset[2*lenDataset + posTrack][posElement][4] = -1 * (dataset[posTrack][posElement][4])
-    #         tmpDataset[2*lenDataset + posTrack][posElement][5] = -1 * (dataset[posTrack][posElement][5])
-    #         tmpDataset[3*lenDataset + posTrack][posElement][5] = -1 * (dataset[posTrack][posElement][5])
-            
-    #         tmpDataset[4*lenDataset + posTrack][posElement][4] =  1 * (dataset[posTrack][posElement][5])
-    #         tmpDataset[4*lenDataset + posTrack][posElement][5] =  1 * (dataset[posTrack][posElement][4])
-    #         tmpDataset[5*lenDataset + posTrack][posElement][4] = -1 * (dataset[posTrack][posElement][5])
-    #         tmpDataset[5*lenDataset + posTrack][posElement][5] =  1 * (dataset[posTrack][posElement][4])
-    #         tmpDataset[6*lenDataset + posTrack][posElement][4] = -1 * (dataset[posTrack][posElement][5])
-    #         tmpDataset[6*lenDataset + posTrack][posElement][5] = -1 * (dataset[posTrack][posElement][4])
-    #         tmpDataset[7*lenDataset + posTrack][posElement][4] =  1 * (dataset[posTrack][posElement][5])
-    #         tmpDataset[7*lenDataset + posTrack][posElement][5] = -1 * (dataset[posTrack][posElement][4])
-
-    #         posElement = posElement + 1
-    #     posElement = 0
-    #     # tmpDataset.aconda install conda-forge::tensorflowppend(tmpDataset1)
-    #     # tmpDataset.append(tmpDataset2)
-    #     # tmpDataset.append(tmpDataset3)
-    #     # tmpDataset.append(tmpDataset4)
-
-    #     # tmpDataset.append(tmpDataset5)
-    #     # tmpDataset.append(tmpDataset6)
-    #     # tmpDataset.append(tmpDataset7)
-    #     # tmpDataset.append(tmpDataset8)
-    #     # tmpDataset.extend((tmpDataset1, tmpDataset2, tmpDataset3, tmpDataset4, tmpDatasetk5, tmpDataset6, tmpDataset7, tmpDataset8))
-        
-        
-        
-    #     posTrack = posTrack + 1
-
-    # # print(len(tmpTrack1))
-    # # print(tmpTrack1[0]) #[0:len(tmpTrack1)])
-    # # sdf
-    # # posTrack = 0
-    # # while posTrack < len(dataset):
-    # #     tmpDataset.append(tmpDataset1[posTrack])
-    # #     posTrack = posTrack + 1
-    # # posTrack = 0
-    # # while posTrack < len(dataset):
-    # #     tmpDataset.append(tmpDataset2[posTrack])
-    # #     posTrack = posTrack + 1
-    # # posTrack = 0
-    # # while posTrack < len(dataset):
-    # #     tmpDataset.append(tmpDataset3[posTrack])
-    # #     posTrack = posTrack + 1
-    # # posTrack = 0
-    # # while posTrack < len(dataset):
-    # #     tmpDataset.append(tmpDataset4[posTrack])
-    # #     posTrack = posTrack + 1
-    # # posTrack = 0
-    # # while posTrack < len(dataset):
-    # #     tmpDataset.append(tmpDataset1[posTrack])
-    # #     posTrack = posTrack + 1
-    # # posTrack = 0
-    # # while posTrack < len(dataset):
-    # #     tmpDataset.append(tmpDataset1[posTrack])
-    # #     posTrack = posTrack + 1
-    # # posTrack = 0
-    # # while posTrack < len(dataset):
-    # #     tmpDataset.append(tmpDataset1[posTrack])
-    # #     posTrack = posTrack + 1
-    # # posTrack = 0
-    # # while posTrack < len(dataset):
-    # #     tmpDataset.append(tmpDataset1[posTrack])
-    # #     posTrack = posTrack + 1
-
-
-    # # tmpDataset.extend((tmpTrack1[0:], tmpTrack2[0:], tmpTrack3[0:], tmpTrack4[0:], tmpTrack5[0:], tmpTrack6[0:], tmpTrack7[0:], tmpTrack8[0:]))
-
-
-    # # tmpDataset[0:lenDataset] = tmpTrack1 #+ tmpTrack2+ tmpTrack3+ tmpTrack4+ tmpTrack5+ tmpTrack6+ tmpTrack7+ tmpTrack8)
-    # # tmpDataset[lenDataset:2*lenDataset] = tmpTrack2
-    # # tmpDataset[2*lenDataset:3*lenDataset] = tmpTrack3
-    # # tmpDataset[3*lenDataset:4*lenDataset] = tmpTrack4
-    # # tmpDataset[4*lenDataset:5*lenDataset] = tmpTrack5
-    # # tmpDataset[5*lenDataset:6*lenDataset] = tmpTrack6
-    # # tmpDataset[6*lenDataset:7*lenDataset] = tmpTrack7
-    # # tmpDataset[7*lenDataset:8*lenDataset] = tmpTrack8
-
-    # # print(type(tmpDataset))
-
-    # print('trackMirrow:\t' + str(len(dataset)) + ' * 8 = ' + str(len(tmpDataset)))
-    # preTime = statusMsg(startTime, preTime)
-    
-    # # free up memory
-    # del dataset
-    # # del tmpTrack1
-    # # del tmpTrack2
-    # # del tmpTrack3
-    # # del tmpTrack4
-    # # del tmpTrack5
-    # # del tmpTrack6
-    # # del tmpTrack7
-    # # del tmpTrack8
-    # del posTrack
-    # del posElement
-    
-    # return tmpDataset, preTime
-
-# '''Erzeugt weitere Tracks durch Spiegelung an der X- und Y-Achse'''
+ 
     lenDataset = len(dataset)
 
     tmpDataset = []
@@ -892,14 +686,6 @@ def trackMirrow(dataset, startTime, preTime):
     tmpTrack6 = [0] * lenDataset
     tmpTrack7 = [0] * lenDataset
     tmpTrack8 = [0] * lenDataset
-    # tmpTrack1= []
-    # tmpTrack2= []
-    # tmpTrack3= []
-    # tmpTrack4= []
-    # tmpTrack5= []
-    # tmpTrack6= []
-    # tmpTrack7= []
-    # tmpTrack8= []
     posTrack = 0
     posElement = 0
 
@@ -931,15 +717,6 @@ def trackMirrow(dataset, startTime, preTime):
 
             posElement = posElement + 1
         posElement = 0
-        # tmpTracks.append(tmpTrack1)
-        # tmpTracks.append(tmpTrack2)
-        # tmpTracks.append(tmpTrack3)
-        # tmpTracks.append(tmpTrack4)
-
-        # tmpTracks.append(tmpTrack5)
-        # tmpTracks.append(tmpTrack6)
-        # tmpTracks.append(tmpTrack7)
-        # tmpTracks.append(tmpTrack8)
         tmpDataset.extend((tmpTrack1, tmpTrack2, tmpTrack3, tmpTrack4, tmpTrack5, tmpTrack6, tmpTrack7, tmpTrack8))
         
         posTrack = posTrack + 1
@@ -1081,12 +858,6 @@ def fileSaving(dataset, path, lengthMessage, numberOfTrackVariations, startTime,
         del csvElement
         del csvTrack
         del csvDataset
-
-
-        # print(tracks)
-        # print(len(tracks))
-        # print(len(tracks[0]))
-        # print(tracks[0][0])
         
         # creats sting for gnuplot-file
         # GNU Plot neeeds an other data formation
@@ -1162,135 +933,6 @@ def fileSaving(dataset, path, lengthMessage, numberOfTrackVariations, startTime,
 
         print('done')
 
-# def fileStats(dataset, path, statcount, startTime, preTime):
-
-#     file_path = path[:len(path)-4] + str(statcount) +'_tracks_state.csv'
-
-#     textList = []
-#     lengthList = []
-#     timeList = []
-    
-#     textStr = ''
-#     deltaLength = 0
-#     length = 0
-#     trackSpeed = 0
-#     posTrack = 0
-
-#     sumStepLength = 0
-#     sumLength = 0
-#     sumTime = 0
-#     sumSpeed = 0
-#     sumElements = 0
-#     sumLenDataset = 0
-#     posElement = 1
-
-
-#     while posTrack < len(dataset): # select track
-#         posElement = 1
-#         while posElement < len(dataset[posTrack]): # select element 
-#             deltaLength =np.sqrt((float(dataset[posTrack][posElement][4])-float(dataset[posTrack][posElement-1][4]))**2 + (float(dataset[posTrack][posElement][5])-float(dataset[posTrack][posElement-1][5]))**2)
-
-#             lengthList.append(deltaLength)
-#             timeList.append(float(dataset[posTrack][posElement][1])-float(dataset[posTrack][posElement-1][1]))
-#             length = length + deltaLength
-            
-#             posElement = posElement + 1
-#         timE = float(dataset[posTrack][posElement-1][1] - float(dataset[posTrack][0][1]))
-#         trackSpeed = length / timE 
-#         stepLength = length / (posElement)
-#         sumStepLength = sumStepLength + stepLength
-#         sumLength = sumLength + length
-#         sumTime = sumTime + timE
-#         sumSpeed = sumSpeed + trackSpeed
-#         sumLenDataset = sumLenDataset + posElement
-#         #sumElements = len(dataset[posTrack]) + sumElements 
-#         textList.append(str('MMSI:\t ' + str(dataset[posTrack][0][0]) + '\t lenTrack:\t' + '{0:9.0f}'.format(len(dataset[posTrack])) +  '\tavgStepLength:\t' + '{0:0.6f}'.format(stepLength) + '\t lenght:\t' + '{0:9.3f}'.format(length) + '\t Time:\t' + '{0:9.0f}'.format(timE) + '\t trackAvgSpeed:\t' + '{0:3.6f}'.format(trackSpeed)))
-#         #textList.append(str(str(dataset[posTrack][0][0]) + ', \t' + '{0:9.0f}'.format(len(dataset[posTrack])) +  ', \t' + '{0:0.6f}'.format(stepLength) + ', \t' + '{0:9.3f}'.format(length) + ', \t' + '{0:9.0f}'.format(timE) + ', \t' + '{0:3.6f}'.format(trackSpeed)))
-        
-#         deltaLength = 0
-#         length = 0
-
-#         posTrack = posTrack + 1
-
-
-
-
-#     avgStepLength = sumStepLength / len(dataset)
-#     avgLength = sumLength / len(dataset)
-#     avgTime = sumTime / len(dataset)
-#     avgSpeed = sumSpeed / len(dataset)
-#     avgLenDataset = sumLenDataset / len(dataset)
-
-    
-    
-
-#     textList.append(str('Dataset:\t' + '{0:9.0f}'.format(len(dataset)) + '\avgLenDataset:\t' + '{0:6.3f}'.format(avgLenDataset) + '\tavgStepLength:\t' + '{0:3.6f}'.format(avgStepLength) + '\tavgLength:\t '+ '{0:9.3f}'.format(avgLength) + '\tavgTime:\t' + '{0:9.3f}'.format(avgTime) + '\tavgSpeed:\t' + '{0:3.6f}'.format(avgSpeed)))
-#     #textList.append('{0:9.0f}'.format(len(dataset)) + ', \t' + '{0:6.3f}'.format(avgLenDataset) + ', \t' + '{0:3.6f}'.format(avgStepLength) + ', \t' + '{0:9.3f}'.format(avgLength) + ', \t' + '{0:9.3f}'.format(avgTime) + ', \t' + '{0:3.6f}'.format(avgSpeed))
-
-#     # Median
-#     # auartil1 = df.time_diff.quantile([0.25])
-#     # auartil2 = df.time_diff.quantile([0.5])
-#     # auartil3 = df.time_diff.quantile([0.75])
-
-#     lengthListMean = statistics.mean(lengthList)
-#     lengthListStdev = statistics.stdev(lengthList)
-#     lengthListQantiles = statistics.quantiles(lengthList, n=4)
-#     lengthListMin = min(lengthList)
-#     lengthListMax = max(lengthList)
-
-
-#     textList.append(str('lengthMin:\t' + '{0:9.0f}'.format(lengthListMin) + '\tlength1.Quartil:\t' + '{0:6.3f}'.format(lengthListQantiles[0]) + 
-#                          '\tlengthMedi:\t' + '{0:3.6f}'.format(lengthListQantiles[1]) + '\tlengthMean:\t '+ '{0:9.3f}'.format(lengthListMean) + 
-#                          '\tlength3.Quartil:\t' + '{0:9.3f}'.format(lengthListQantiles[2]) + '\tlengthMax:\t' + '{0:3.6f}'.format(lengthListMax)) + '\tlengthstdev: \t' + '{0:3.6f}'.format(lengthListStdev))
-    
-#     # textList.append(str('{0:9.0f}'.format(lengthListMin) + '{0:6.3f}'.format(lengthListQantiles[0]) + 
-#     #                      '{0:3.6f}'.format(lengthListQantiles[1]) +  '{0:9.3f}'.format(lengthListMean) + 
-#     #                      '{0:9.3f}'.format(lengthListQantiles[2]) + '{0:3.6f}'.format(lengthListMax)) + '{0:3.6f}'.format(lengthListStdev))
-
-
-    
-
-#     timeListMean = statistics.mean(timeList)
-#     timeListStdev = statistics.stdev(timeList)
-#     timeListQantiles = statistics.quantiles(timeList, n=4)
-#     timeListMin = min(timeList)
-#     timeListMax = max(timeList)
-
-#     textList.append(str('timeMin:\t' + '{0:9.0f}'.format(timeListMin) + '\ttime1.Quartil:\t' + '{0:6.3f}'.format(timeListQantiles[0]) + 
-#                          '\ttimeMedi:\t' + '{0:3.6f}'.format(timeListQantiles[1]) + '\ttimeMean:\t '+ '{0:9.3f}'.format(timeListMean) + 
-#                          '\ttime3.Quartil:\t' + '{0:9.3f}'.format(timeListQantiles[2]) + '\ttimeMax:\t' + '{0:3.6f}'.format(timeListMax)) + '\ttimestdev: \t' + '{0:3.6f}'.format(timeListStdev))
-    
-#     # textList.append(str('{0:9.0f}'.format(timeListMin) + '{0:6.3f}'.format(timeListQantiles[0]) + 
-#     #                      '{0:3.6f}'.format(timeListQantiles[1]) +  '{0:9.3f}'.format(timeListMean) + 
-#     #                      '{0:9.3f}'.format(timeListQantiles[2]) + '{0:3.6f}'.format(timeListMax)) + '{0:3.6f}'.format(timeListStdev))
-    
-    
-    
-
-#     textStr = '\n'.join(map(str, textList))
-#     # print(textStr)
-
-#     # creating a new empty file or overwriting existend file
-#     save_file = open(file_path, 'w')
-#     save_file.write(textStr)
-#     save_file.close() 
-
-#     statcount = statcount + 1 
-
-
-#     print('fileStats')
-#     preTime = statusMsg(startTime, preTime)
-
-#     # free up memory
-#     del textList
-#     del textStr
-#     del deltaLength
-#     del length 
-#     del avgSpeed
-#     del posTrack
-#     del posElement
-
-#     return statcount
 
 def statusMsg(startTime, preTime):
     print('Laufzeit insg: ' + '{0:9.6f}'.format((time.time() - startTime)) + '\tLaufzeit Fkt: ' + '{0:6.6f}'.format((time.time() - preTime)) + '\tRAM in MiB: ' + '{0:6.1f}'.format(psutil.Process().memory_info()[1] / float(2**20)))
@@ -1307,7 +949,9 @@ def statusMsg(startTime, preTime):
 # mainAIS('/home/sebastian/Dokumente/AIS-Files/aisdk-2023-11-08.csv')
 # mainAIS('/home/sebastian/Dokumente/AIS-Files/aisdk-2023-11-09.csv')
 # mainAIS('/home/sebastian/Dokumente/AIS-Files/aisdk-2023-11-08-xs.csv')
-mainAIS('/home/sebastian/Dokumente/Python-Git/py-ma-git/workdir/AIS-Files/aisdk-2023-11-08-s.csv')
+mainAIS('/home/sebastian/Dokumente/Python-Git/py-ma-git/workdir/AIS-Files/aisdk-2023-11-08.csv')
+#mainAIS('/home/sebastian/Dokumente/Python-Git/py-ma-git/workdir/AIS-Files/aisdk-2023-11-08-m.csv')
+#mainAIS('/home/sebastian/Dokumente/Python-Git/py-ma-git/workdir/AIS-Files/aisdk-2023-11-08-s.csv')
 # mainAIS('/home/sebastian/Dokumente/AIS-Files/aisdk-2023-11-11.csv')
 #mainAIS('/home/sebastian/Dokumente/AIS-Files/aisdk-2023-11-08-10.csv')
 
