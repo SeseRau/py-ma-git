@@ -787,8 +787,8 @@ def fileSaving(dataset, path, lengthMessage, numberOfTrackVariations, startTime,
 
 
         # creating a new path
-        csv_path = path[:len(path)-4] + '_' + str(numberOfTrackVariations) + '_kkn.csv'
-        gnu_path = path[:len(path)-4] + '_' + str(numberOfTrackVariations) + '_kkn_gnu.csv'
+        csv_path = path[:len(path)-4] + '_' + str(numberOfTrackVariations) + '_knn.csv'
+        gnu_path = path[:len(path)-4] + '_' + str(numberOfTrackVariations) + '_knn_gnu.csv'
 
         #/home/sebastian/Dokumente/Python-Git/py-my
 
