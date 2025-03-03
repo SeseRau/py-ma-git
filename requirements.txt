@@ -7,7 +7,7 @@ psutil
 argparse
 pandas
 ipykernel
-seaborn
+seabornb
 jupyter
 tqdm
-auto-sklearn
+auto-sklearnq
