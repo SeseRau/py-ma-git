@@ -13,3 +13,6 @@ build/
 .DS_Store
 *.log
 *.sqlite3
+
+venv_*
+3.9.13
